@@ -1,1 +1,1817 @@
-hello word 4
+<!DOCTYPE html>
+<html>
+<head>
+<title>Donat Susu 66</title>
+</head>
+<style>
+/* KONDISI AWAL (belum disentuh) */
+.donut-card {
+  background-size: 400px auto;
+  transition:
+    background-size 0.35s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* SAAT ADA JUMLAH (>0) */
+.donut-card.active {
+  background-size: 300px auto;
+  box-shadow: 0 18px 40px rgba(255,122,0,0.25);
+}
+
+/* SENTUHAN HALUS SAAT KLIK */
+.donut-card.tap {
+  transform: scale(0.97);
+}
+
+/* ANIMASI ANGKA POP */
+@keyframes pop {
+  0%   { transform: translateX(-50%) scale(0.6); }
+  60%  { transform: translateX(-50%) scale(1.2); }
+  100% { transform: translateX(-50%) scale(1); }
+}
+
+.count-display.pop {
+  animation: pop 0.35s ease;
+}
+
+@keyframes shake {
+  0% { transform: translateX(-50%) translateX(0); }
+  25% { transform: translateX(-50%) translateX(-4px); }
+  50% { transform: translateX(-50%) translateX(4px); }
+  75% { transform: translateX(-50%) translateX(-2px); }
+  100% { transform: translateX(-50%) translateX(0); }
+}
+
+.count-display.shake {
+  animation: shake 0.3s ease;
+}
+
+.donut-card.active [data-action="plus"] {
+  transform: translateY(-3px);
+}
+
+.donut-card.active [data-action="minus"] {
+  transform: translateY(-1px);
+}
+
+[data-action] {
+  transition: transform 0.2s ease;
+}
+@keyframes float {
+  0%   { background-size: 340px auto; }
+  50%  { background-size: 355px auto; }
+  100% { background-size: 340px auto; }
+}
+
+.donut-card:not(.active) {
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes ripple {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255,122,0,0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 25px rgba(255,122,0,0);
+  }
+}
+
+.donut-card.ripple {
+  animation: ripple 0.45s ease-out;
+}
+
+.donut-card.active [data-action="plus"] {
+  transform: translateY(-3px);
+}
+
+.donut-card.active [data-action="minus"] {
+  transform: translateY(-1px);
+}
+
+.flying-donut {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 9999;
+  transition: 
+    transform 0.7s cubic-bezier(.49,-0.15,.51,1.15),
+    opacity 0.7s ease;
+}
+@media (max-width: 768px) {
+  .donut-card {
+    background-size: min(95%, 300px) auto;
+  }
+
+  @keyframes float {
+    0%   { background-size: min(95%, 300px) auto; }
+    50%  { background-size: min(100%, 320px) auto; }
+    100% { background-size: min(95%, 300px) auto; }
+  }
+
+  .donut-card.active {
+    background-size: min(70%, 220px) auto;
+  }
+}
+
+@keyframes pulseText {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.hero{
+  position: relative;
+  overflow: hidden;
+  padding: 150px 20px;
+  background: linear-gradient(to right, #734128, #c7a07a);
+  font-family: 'Poppins', sans-serif;
+  touch-action: pan-x pan-y;
+}
+
+.slider{
+  overflow: hidden;
+  max-width: 100%;
+  touch-action: pan-x pan-y;
+}
+
+.slides{
+  display: flex;
+  transform: translate3d(0,0,0); /* 🔥 GPU */
+  will-change: transform;        /* 🔥 PREPARE RENDER */
+  transition: transform 0.45s cubic-bezier(.22,.61,.36,1);
+}
+
+/* DOT */
+.dots span{
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.3);
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+.dots span.active{
+  background:#fff;
+  transform: scale(1.6);
+}
+
+.dots{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:25px;
+}
+
+.dots span{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:rgba(255,255,255,.3);
+  transition:transform .3s ease, background .3s ease;
+}
+
+.dots span.active{
+  background:#fff;
+  transform:scale(1.6);
+}
+
+/* =========================
+   HERO DONUT SIZE CONTROLLER
+   ========================= */
+
+.slides img{
+  --donut-scale: 1;
+  --donut-x: 0px;
+  --donut-y: 0px;
+  --donut-opacity: 0.35;
+
+  transition:
+    transform 0.45s cubic-bezier(.22,.61,.36,1),
+    opacity 0.45s ease,
+    filter 0.45s ease;
+
+  transform:
+    translateX(
+  clamp(-12vw, var(--donut-x), 12vw))
+    translateY(var(--donut-y))
+    scale(var(--donut-scale));
+
+  opacity: var(--donut-opacity);
+  filter: blur(2px);
+}
+
+.slides img{
+  width: 260px;
+  max-width: 70vw;
+  height: auto;
+  object-fit: contain;
+  transform-origin: center center;
+}
+
+.slides img{
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+</style>
+
+<body style="background-color: #e2ceb1;">
+
+<div style="display:flex; gap:12px; align-items:center; position: sticky; top: 0; z-index: 999; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 12px 20px;">
+<a id="orderBtn" style="
+  padding:10px 18px;
+  background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+  color:#fff;
+  border-radius:30px;
+  text-decoration:none;
+  opacity:0.4;
+  pointer-events:none;
+  transition:0.3s;
+">
+  Pesan Sekarang
+</a>
+</div>
+  
+<div style="
+  background: linear-gradient(to right, #734128, #c7a07a);
+  padding: 150px 20px;
+  color: #eafce5;
+  border-radius: 0px 0px 0px 0px;
+  font-family: 'Poppins', sans-serif;
+">
+
+  <div class="hero">
+
+    <div class="slider">
+      <div class="slides">
+        <img src="https://iili.io/fjwRRff.png" style=" --donut-x: 40px;">
+        <img src="https://i.ibb.co.com/NgjV7pVb/1000441720-removebg-preview.png" style=" --donut-x: 40px;">
+        <img src="https://i.ibb.co.com/Nn9sCXTB/1000441791-removebg-preview.png" style=" --donut-x: 40px;">
+        <img src="https://i.ibb.co.com/WNmwhYP6/1000441877-removebg-preview.png" style=" --donut-x: 40px;">
+        <img src="https://i.ibb.co.com/wFcdHghr/1000441879-removebg-preview.png" style=" --donut-x: 40px;">
+        <img src="https://i.ibb.co.com/3yqRj60b/1000441881-removebg-preview.png" style=" --donut-x: 40px;">
+        <img src="https://iili.io/fjwxeDb.md.png" style=" --donut-x: 40px;">
+        <img src="https://i.ibb.co.com/Gz41JcW/Image-empty-state.png" style=" --donut-x:40px;">
+        <img src="https://iili.io/fjwsD1S.png" style="--donut-scale: 0.85; --donut-x: 40px;">
+        <img src="https://iili.io/fjO3b0F.png" style="--donut-scale: 0.85; --donut-x: 40px;">
+        <img src="https://iili.io/fjNO1Jp.png" style="--donut-x: 40px;">
+        <img src="https://iili.io/fjNOE5N.md.png" style=" --donut-x: 40px;">
+      </div>
+    </div>
+
+    <div class="dots"></div>
+  </div>
+  
+<h2 style="
+  margin: 0 0 5px 30px;
+  color: #fff;
+  font-size: 30px;
+">Enak & Bikin Kenyang 
+    </h2>
+
+<h1 style="
+  margin: 5px 0 5px 20px;
+  color: #fff;
+  font-size: 65px;
+  animation: pulseText 2.2s ease-in-out infinite;
+">
+  DONATSUSU66
+</h1>
+    
+<p style="
+  margin: 5px 0 0 20px;
+  color: #fff;
+  font-size: 20px;
+"> Donat tersedia berbagai varian rasa, hangat, dan enak
+</p>
+
+</div>
+    
+<div style="
+  background-color: #fefaf5;
+  padding: 100px 20px;
+  margin-top: 30px;
+  font-family: 'Poppins', sans-serif;
+">
+
+  <div style="
+    display: flex;
+    gap: 30px;
+    max-width: 1000px;
+    margin: auto;
+    align-items: center;
+  ">
+
+    <!-- KIRI: GAMBAR -->
+    <div style="flex: 1;">
+      <img 
+        src="https://i.ibb.co.com/HLSCVrMz/IMG-20260102-WA0010.jpg"
+        alt="Donatsusu66"
+        style="
+          width: 100%;
+          border-radius: 25px;
+        "
+      >
+    </div>
+
+    
+    <div style="flex: 1; color: #333;">
+      <h2 style="margin: 0 0 15px; font-size: 30px;">Tentang Kami</h2>
+      <p style="margin: 0; line-height: 1.6; font-size: 20px;">
+        Donatsusu66 adalah usaha donat yang mengutamakan rasa,
+        kualitas, dan kehangatan di setiap gigitan.
+        Kami menyajikan berbagai varian rasa yang dibuat
+        fresh setiap hari untuk menemani momen kamu.
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<h2 style="margin: 50px 0 5px 30px; font-size: 30px; font-family: 'Poppins', sans-serif; color: #391e10">
+  Varian Rasa
+</h2>
+
+<h3 style="margin: 5px 0 5px 30px; font-size: 20px; font-family: 'Poppins', sans-serif; color: #391e10">
+  Tersedia berbagai varian rasa:
+</h3>
+
+<p style="margin: 5px 0 5px 30px; font-size: 20px; font-family: 'Poppins', sans-serif; color: #391e10">
+Coklat Vanilla Tiramisu Stroberi Matcha Taro Keju Meses coklat Meses warna oreo Dancow susu Dancow coklat Redvelvet
+</p>
+
+<div style="
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 60px;
+">
+
+<div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://iili.io/fjwRRff.png');
+  background-repeat: no-repeat;
+  background-position: center 100px;
+  background-size: 330px auto;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa Coklat
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+  <div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+
+</div>
+
+<div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://i.ibb.co.com/NgjV7pVb/1000441720-removebg-preview.png');
+  background-repeat: no-repeat;
+  background-position: center 100px;
+  background-size: 330px auto;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa Vanilla
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+  <div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+  
+  </div>
+
+<div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://i.ibb.co.com/Nn9sCXTB/1000441791-removebg-preview.png');
+  background-repeat: no-repeat;
+  background-position: center 60px;
+  background-size: 300px auto;
+  position: relative;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa Tiramisu
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+<div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+
+  </div>
+  
+  <div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://i.ibb.co.com/WNmwhYP6/1000441877-removebg-preview.png');
+  background-repeat: no-repeat;
+  background-position: center 100px;
+  background-size: 350px auto;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa Stroberi
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+  <div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+
+</div>
+
+<div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://i.ibb.co.com/wFcdHghr/1000441879-removebg-preview.png');
+  background-repeat: no-repeat;
+  background-position: center 100px;
+  background-size: 280px auto;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa Matcha
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+  <div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+
+</div>
+
+<div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://i.ibb.co.com/3yqRj60b/1000441881-removebg-preview.png');
+  background-repeat: no-repeat;
+  background-position: center 100px;
+  background-size: 330px auto;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa Taro
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+  <div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+  
+  </div>
+  
+  <div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://iili.io/fjwxeDb.md.png');
+  background-repeat: no-repeat;
+  background-position: center 60px;
+  background-size: 300px auto;
+  position: relative;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa Keju
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+<div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+
+  </div>
+  
+  <div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://i.ibb.co.com/Gz41JcW/Image-empty-state.png');
+  background-repeat: no-repeat;
+  background-position: center 100px;
+  background-size: 280px auto;
+  position: relative;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa meses coklat
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+<div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+
+  </div>
+  
+  <div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://iili.io/fjwsD1S.png');
+  background-repeat: no-repeat;
+  background-position: center 60px;
+  background-size: 480px auto;
+  position: relative;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa meses warna
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+<div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+
+  </div>
+  
+  <div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://iili.io/fjO3b0F.png');
+  background-repeat: no-repeat;
+  background-position: center 60px;
+  background-size: 300px auto;
+  position: relative;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa Oreo
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+<div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+
+  </div>
+  
+  <div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://iili.io/fjNO1Jp.png');
+  background-repeat: no-repeat;
+  background-position: center 60px;
+  background-size: 300px auto;
+  position: relative;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa Dancow susu
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+<div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+
+  </div>
+  
+  <div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://iili.io/fjNOE5N.md.png');
+  background-repeat: no-repeat;
+  background-position: center 60px;
+  background-size: 300px auto;
+  position: relative;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa Dancow coklat
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+<div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+
+  </div>
+  
+  <div class="product-card donut-card" data-count="0" style="position: relative;
+display: flex;
+flex-direction: column;
+  background-color: #fefaf5;
+  background-image: url('https://iili.io/fjOC7HX.png');
+  background-repeat: no-repeat;
+  background-position: center 100px;
+  background-size: 280px auto;
+  width: 380px;
+  height: 520px;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease,
+    box-shadow 0.3s ease,
+    background-size 0.3s ease;
+"
+onmouseover="
+  this.style.transform='translateY(-6px)';
+  this.style.boxShadow='0 20px 40px rgba(0,0,0,0.12)';
+  this.style.backgroundSize='215px auto';
+"
+onmouseout="
+  this.style.transform='translateY(0)';
+  this.style.boxShadow='none';
+  this.style.backgroundSize='200px auto';
+"
+ontouchstart="this.style.transform='scale(0.97)'"
+ontouchend="this.style.transform='scale(1)'"
+>
+
+  <h2 style="margin:0;font-size:30px;color:#3b2a1a;text-align:center;">
+    Rasa red velvet
+  </h2>
+
+  <div style="flex:1;"></div>
+  <div class="count-display" style="
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  transform: translateX(-50%) scale(0.8);
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  color:#ff7a00;
+  opacity:0;
+  transition: all 0.25s ease;
+  z-index: 5;
+">
+  0
+</div>
+
+  <div style="display:flex;gap:10px;justify-content:center;">
+    <a data-action="plus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:linear-gradient(to bottom,#ff9f45,#ff7a00);
+      color:#fff;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+    ">Tambahkan</a>
+
+    <a data-action="minus" style="margin: 20px 0 0;
+      padding:10px 18px;
+      background:#fefaf5;
+      color:#ff7a00;
+      text-decoration:none;
+      border-radius:30px;
+      font-weight:600;
+      font-size:13px;
+      border:2px solid #ff7a00;
+    ">Kurang</a>
+  </div>
+
+</div>
+  
+  
+  </div>
+  
+
+<!-- 🔽 TAMBAHKAN SCRIPT INI DI SINI (FADE-IN OBSERVER) 🔽 -->
+<script>
+  const fadeObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        fadeObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.product-card').forEach(card => {
+    fadeObserver.observe(card);
+  });
+</script>
+<!-- 🔼 SAMPAI DI SINI 🔼 -->
+
+
+<script>
+  const MIN = 3;
+
+  // Pasang event untuk setiap kartu
+  document.querySelectorAll('.product-card').forEach(card => {
+    const plusBtn = card.querySelector('[data-action="plus"]');
+    const minusBtn = card.querySelector('[data-action="minus"]');
+    const display = card.querySelector('.count-display');
+
+    // TOMBOL TAMBAH
+    plusBtn.addEventListener('click', () => {
+      let count = parseInt(card.dataset.count || 0);
+      count++;
+
+      card.dataset.count = count;
+      display.textContent = count;
+      display.style.opacity = '1';
+      display.style.transform = 'translateX(-50%) scale(1)';
+
+// RIPPLE KARTU
+card.classList.remove('ripple');
+void card.offsetWidth;
+card.classList.add('ripple');
+
+display.classList.remove('pop');
+void display.offsetWidth; // reset animation
+display.classList.add('pop');
+
+// FLYING DONUT KE NAVBAR
+const donut = document.createElement('div');
+donut.className = 'flying-donut';
+
+// pakai gambar background kartu
+donut.style.backgroundImage = card.style.backgroundImage;
+
+// posisi awal (tengah kartu)
+const cardRect = card.getBoundingClientRect();
+donut.style.left = cardRect.left + cardRect.width / 2 - 20 + 'px';
+donut.style.top = cardRect.top + cardRect.height / 2 - 20 + 'px';
+
+document.body.appendChild(donut);
+
+// target: tombol Pesan Sekarang
+const target = document.getElementById('orderBtn').getBoundingClientRect();
+
+requestAnimationFrame(() => {
+  donut.style.transform = `
+    translate(
+      ${target.left - cardRect.left}px,
+      ${target.top - cardRect.top}px
+    ) scale(0.3)
+  `;
+  donut.style.opacity = '0';
+  
+});
+
+setTimeout(() => donut.remove(), 700);
+
+
+// 🔥 AKTIFKAN ANIMASI GAMBAR
+  card.classList.add('active');
+
+updateNavbarButton();
+    });
+
+    // TOMBOL KURANG
+    minusBtn.addEventListener('click', () => {
+      let count = parseInt(card.dataset.count || 0);
+      count--;
+
+      if (count < 0) count = 0;
+
+      card.dataset.count = count;
+      display.textContent = count;
+
+      if (count === 0) {
+        display.style.opacity = '0';
+        display.style.transform = 'translateX(-50%) scale(0.8)';
+        display.classList.remove('shake');
+void display.offsetWidth;
+display.classList.add('shake');
+
+    card.classList.remove('active');
+  }
+      updateNavbarButton();
+    });
+  });
+
+  // UPDATE STATUS TOMBOL NAVBAR
+  function updateNavbarButton() {
+    let total = 0;
+
+    document.querySelectorAll('.product-card').forEach(card => {
+      total += parseInt(card.dataset.count || 0);
+    });
+
+    const btn = document.getElementById('orderBtn');
+    if (!btn) return;
+
+    const valid = total >= MIN && total % 3 === 0;
+
+    btn.style.pointerEvents = valid ? 'auto' : 'none';
+    btn.style.opacity = valid ? '1' : '0.4';
+  }
+
+</script>
+
+<script>
+let userInteracted = false;
+
+const slidesEl = document.querySelector('.slides');
+const originalSlides = Array.from(slidesEl.children);
+const slideCount = originalSlides.length;
+
+// CLONE UNTUK LOOP
+const firstClone = originalSlides[0].cloneNode(true);
+const lastClone  = originalSlides[slideCount - 1].cloneNode(true);
+
+slidesEl.appendChild(firstClone);
+slidesEl.insertBefore(lastClone, originalSlides[0]);
+
+const slideImgs = Array.from(slidesEl.children);
+const dotsWrap = document.querySelector('.dots');
+const slider = document.querySelector('.slider');
+
+const SLIDE_WIDTH = 340;
+const SLIDE_VISIBLE_WIDTH = 260;
+let current = 0;
+let currentTranslate = 0;
+let autoSlideInterval;
+
+// === DOTS ===
+originalSlides.forEach((_, i) => {
+  const dot = document.createElement('span');
+  dot.onclick = () => goToSlide(i + 1); // +1 karena clone
+  dotsWrap.appendChild(dot);
+});
+
+const dots = dotsWrap.querySelectorAll('span');
+dots[0].classList.add('active');
+
+// === POSISI AWAL KE SLIDE ASLI PERTAMA ===
+current = 1;
+goToSlide(current);
+
+
+// === PINDAH SLIDE ===
+function goToSlide(index) {
+  current = index;
+
+  const sliderWidth = slider.offsetWidth;
+
+  currentTranslate =
+    -index * SLIDE_WIDTH +
+    (sliderWidth / 2) -
+    (SLIDE_VISIBLE_WIDTH / 2);
+
+  slidesEl.style.transition =
+    'transform 0.45s cubic-bezier(.22,.61,.36,1)';
+
+  slidesEl.style.transform =
+    `translate3d(${currentTranslate}px, 0, 0)`;
+
+  // UPDATE VISUAL
+  requestAnimationFrame(updateHeroVisual);
+
+  // === DOTS ===
+  dots.forEach(d => d.classList.remove('active'));
+
+let dotIndex = current - 1;
+
+// kalau clone kiri → dot terakhir
+if (current === 0) dotIndex = slideCount - 1;
+
+// kalau clone kanan → dot pertama
+if (current === slideCount + 1) dotIndex = 0;
+
+dots[dotIndex].classList.add('active');
+
+}
+
+function updateHeroVisual() {
+  slideImgs.forEach(img => {
+    const rect = img.getBoundingClientRect();
+    const imgCenter = rect.left + rect.width / 2;
+    const viewportCenter = window.innerWidth / 2;
+
+    const distance = Math.abs(imgCenter - viewportCenter);
+    const t = Math.min(distance / 600, 1);
+
+    const scale = 0.95 - t * 0.25;
+    const opacity = 1 - t * 0.7;
+    const blur = t * 2;
+
+    img.style.setProperty('--donut-scale', scale.toFixed(3));
+    img.style.opacity = opacity;
+    img.style.filter = `blur(${blur}px)`;
+  });
+}
+
+slidesEl.addEventListener('transitionend', () => {
+
+  // lewat kanan → balik ke slide asli pertama
+  if (current === slideCount + 1) {
+    teleportTo(1);
+  }
+
+  // lewat kiri → balik ke slide asli terakhir
+  if (current === 0) {
+    teleportTo(slideCount);
+  }
+
+});
+
+
+// === AUTO SLIDE ===
+function startAutoSlide() {
+  clearInterval(autoSlideInterval); // 🔥 PENTING
+  autoSlideInterval = setInterval(() => {
+    current++;
+    goToSlide(current);
+  }, 3500);
+}
+
+function stopAutoSlide() {
+  clearInterval(autoSlideInterval);
+}
+
+let idleTimer;
+
+function restartAutoAfterIdle() {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    userInteracted = false; // 🔥 reset status
+    startAutoSlide();
+  }, 5000);
+}
+
+startAutoSlide();
+
+// === SWIPE (ANDROID FIXED) ===
+let startX = 0;
+let lastX = 0;
+let velocity = 0;
+let isDragging = false;
+let momentumID;
+
+slider.addEventListener('touchstart', e => {
+  userInteracted = true;   // tandai user sudah interaksi
+  stopAutoSlide();        // matikan auto slide permanen
+
+  startX = lastX = e.touches[0].clientX;
+  velocity = 0;
+  isDragging = true;
+  slidesEl.style.transition = 'none';
+},{ passive: true });
+
+
+slider.addEventListener('touchmove', e => {
+  if(!isDragging) return;
+
+  const x = e.touches[0].clientX;
+  velocity = x - lastX;
+  lastX = x;
+
+let nextTranslate = currentTranslate + (x - startX);
+
+  // BATAS AMAN
+  const maxTranslate =
+    -1 * SLIDE_WIDTH +
+    (slider.offsetWidth / 2) -
+    (SLIDE_VISIBLE_WIDTH / 2);
+
+  const minTranslate =
+    -(slideCount + 1) * SLIDE_WIDTH +
+    (slider.offsetWidth / 2) -
+    (SLIDE_VISIBLE_WIDTH / 2);
+
+  nextTranslate = Math.min(
+  maxTranslate,
+  Math.max(minTranslate, nextTranslate)
+);
+
+  slidesEl.style.transform =
+    `translate3d(${nextTranslate}px,0,0)`;
+
+  requestAnimationFrame(updateHeroVisual);
+},{ passive: true });
+
+function applyInertia() {
+  if (Math.abs(velocity) < 0.5) {
+    snapToNearest();
+    return;
+  }
+  
+  currentTranslate += velocity;
+  velocity *= 0.85;
+
+  slidesEl.style.transform =
+    `translate3d(${currentTranslate}px,0,0)`;
+
+requestAnimationFrame(updateHeroVisual);
+
+  momentumID = requestAnimationFrame(applyInertia);
+}
+
+function snapToNearest() {
+  cancelAnimationFrame(momentumID);
+
+  const sliderWidth = slider.offsetWidth;
+  const center =
+    sliderWidth / 2 - SLIDE_VISIBLE_WIDTH / 2;
+
+  let index = Math.round(
+    (center - currentTranslate) / SLIDE_WIDTH
+  );
+
+  //  IZINKAN MASUK KE CLONE
+  index = Math.max(0, Math.min(slideCount + 1, index));
+
+  current = index;
+  goToSlide(current);
+}
+
+slider.addEventListener('touchend', () => {
+  isDragging = false;
+
+  currentTranslate = slidesEl.getBoundingClientRect().left;
+
+  if (Math.abs(velocity) < 5) {
+    snapToNearest();
+  } else {
+    applyInertia();
+  }
+
+restartAutoAfterIdle();
+});
+
+function teleportTo(index) {
+  slidesEl.style.transition = 'none';
+
+  const sliderWidth = slider.offsetWidth;
+  currentTranslate =
+    -index * SLIDE_WIDTH +
+    (sliderWidth / 2) -
+    (SLIDE_VISIBLE_WIDTH / 2);
+
+  slidesEl.style.transform =
+    `translate3d(${currentTranslate}px,0,0)`;
+
+  current = index;
+
+  requestAnimationFrame(updateHeroVisual);
+}
+
+</script>
+
+
+</body>
+</html>
